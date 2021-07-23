@@ -1,4 +1,4 @@
-const pokemons = [
+const pokemonList = [
   {
       id: 25,
       name: "Pikachu",
@@ -100,4 +100,4 @@ const pokemons = [
   }
 ];
 
-export default pokemons;
+export default pokemonList;
