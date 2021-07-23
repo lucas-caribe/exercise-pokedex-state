@@ -40,7 +40,7 @@ class Pokedex extends React.Component {
   handleClick() {
     let nextPokemon = this.state.currentPoke + 1;
 
-    if (nextPokemon >= this.state.filteredPokemon.length - 1) nextPokemon = 0;
+    if (nextPokemon >= this.state.filteredPokemon.length) nextPokemon = 0;
 
     this.setState({
       filteredPokemon: this.state.filteredPokemon,
