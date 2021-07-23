@@ -13,9 +13,9 @@ class Pokedex extends React.Component {
     }
 
     handleClick () {
-      // const nextPoke = this.state.currentPoke === pokemonList
+      const nextPoke = this.state.currentPoke === pokemonList.length - 1 ? 0 : this.state.currentPoke + 1;
       this.setState({
-        currentPoke: this.state.currentPoke + 1,
+        currentPoke: nextPoke,
       })
     }
 
@@ -25,7 +25,7 @@ class Pokedex extends React.Component {
     return (
       <div className="pokedex">
         <Pokemon key={pokemonList[this.state.currentPoke].id} pokemon={pokemonList[this.state.currentPoke]} />
-        <button onClick= {handleClick} >Next</button>
+        <button onClick= { this.handleClick } >Next</button>
       </div>
     );
   }
