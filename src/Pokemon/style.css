@@ -8,3 +8,7 @@
   border: 1px gray solid;
   border-radius: 10px;
 }
+
+.name, .types {
+  text-transform: capitalize;
+}

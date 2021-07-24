@@ -1,67 +1,130 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import Pokemon from "../Pokemon";
-import Button from "../Button";
+import Pokemon from '../Pokemon';
+import PokemonFilters from '../PokemonFilters';
+import LoadingScreen from '../LoadingScreen';
 
-import "./style.css";
+import './style.css';
 
-function Pokedex({ pokemonList }) {
-  const [filteredPokemon, setFilteredPokemon] = useState(pokemonList);
-  const [currentPokemon, setCurrentPokemon] = useState(0);
+const baseURL = 'https://pokeapi.co/api/v2';
+
+function Pokedex() {
+  const [pokemonList, setPokemonList] = useState([]);
+  const [filteredPokemon, setFilteredPokemon] = useState([]);
   const [pokemonTypes, setPokemonTypes] = useState([]);
-  const [buttonState, setButtonState] = useState(false);
 
   useEffect(() => {
-    const typeTable = {};
+    async function getAbilityInfo(ability) {
+      try {
+        const response = await fetch(ability);
+        const data = await response.json();
 
-    pokemonList.forEach((pokemon) => (typeTable[pokemon.type] = 1));
+        const { name, effect_entries } = data;
 
-    setPokemonTypes(Object.keys(typeTable));
-  }, [pokemonList]);
+        return { name, effect: effect_entries[1].short_effect };
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
-  function handleClick() {
-    setCurrentPokemon((currentPokemon + 1) % filteredPokemon.length);
-  }
+    function getSprites(sprites) {
+      return {
+        back_default: sprites.back_default,
+        back_shiny: sprites.back_shiny,
+        front_default: sprites.front_default,
+        front_shiny: sprites.front_shiny,
+        animated_back_default:
+          sprites.versions['generation-v']['black-white'].animated.back_default,
+        animated_back_shiny:
+          sprites.versions['generation-v']['black-white'].animated.back_shiny,
+        animated_front_default:
+          sprites.versions['generation-v']['black-white'].animated
+            .front_default,
+        animated_front_shiny:
+          sprites.versions['generation-v']['black-white'].animated.front_shiny,
+      };
+    }
+
+    async function fetchPokemonApi() {
+      const fullList = [];
+
+      for (let i = 1; i <= 151; i++) {
+        try {
+          const response = await fetch(`${baseURL}/pokemon/${i}`);
+          const data = await response.json();
+
+          const { id, name, height, weight, sprites, types } = data;
+          const ability = await getAbilityInfo(data.abilities[0].ability.url);
+          const typeNames = types.map((type) => type.type.name);
+          const filteredSprites = getSprites(sprites);
+
+          fullList.push({
+            id,
+            name,
+            averageWeight: {
+              value: weight / 10,
+              measurementUnit: 'kg',
+            },
+            averageHeight: {
+              value: height / 10,
+              measurementUnit: 'm',
+            },
+            sprites: filteredSprites,
+            types: typeNames,
+            ability,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      setPokemonList(fullList);
+      setFilteredPokemon(fullList);
+    }
+
+    async function getPokemonTypes() {
+      const response = await fetch(`${baseURL}/type/`);
+      const data = await response.json();
+
+      setPokemonTypes(data.results.map((type) => type.name));
+    }
+
+    getPokemonTypes();
+    fetchPokemonApi();
+  }, []);
 
   function filterPokemon(type) {
     if (type) {
-      const filteredList = pokemonList.filter(
-        (pokemon) => pokemon.type === type
+      const filteredList = pokemonList.filter((pokemon) =>
+        pokemon.types.includes(type),
       );
 
       setFilteredPokemon(filteredList);
-      setButtonState(filteredList.length === 1);
-      setCurrentPokemon(0);
     }
   }
 
   function clearFilters() {
     setFilteredPokemon(pokemonList);
-    setButtonState(false);
-    setCurrentPokemon(0);
+  }
+
+  if (!pokemonList.length) {
+    return <LoadingScreen />;
   }
 
   return (
     <>
+      <PokemonFilters
+        pokemonTypes={pokemonTypes}
+        filterPokemon={filterPokemon}
+        clearFilters={clearFilters}
+      />
+
       <div className="pokedex">
-        <Pokemon
-          key={filteredPokemon[currentPokemon].id}
-          pokemon={filteredPokemon[currentPokemon]}
-        />
+        {filteredPokemon.length > 0 &&
+          filteredPokemon.map((pokemon) => (
+            <Pokemon key={pokemon.id} pokemon={pokemon} />
+          ))}
       </div>
-
-      <div className="type-filters">
-        {pokemonTypes.map((type, index) => (
-          <Button key={index} filterPokemon={filterPokemon}>
-            {type}
-          </Button>
-        ))}
-        <button onClick={clearFilters}>Clear Filters</button>
-      </div>
-
-      <button onClick={handleClick} disabled={buttonState}>
-        Next
-      </button>
     </>
   );
 }
