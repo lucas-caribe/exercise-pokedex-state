@@ -1,6 +1,6 @@
 import React from "react";
 
-import Pokedex from "./Pokedex";
+import Pokedex from "./Pokedex/";
 
 import pokemonList from "./data";
 
