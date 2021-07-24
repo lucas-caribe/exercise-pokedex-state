@@ -21,7 +21,7 @@ function Pokedex() {
 
         const { name, effect_entries } = data;
 
-        return { name, effect: effect_entries[1].short_effect };
+        return { name, effect: effect_entries[0].short_effect };
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +53,7 @@ function Pokedex() {
           const response = await fetch(`${baseURL}/pokemon/${i}`);
           const data = await response.json();
 
-          const { id, name, height, weight, sprites, types } = data;
+          const { id, name, height, weight, sprites, types, stats } = data;
           const ability = await getAbilityInfo(data.abilities[0].ability.url);
           const typeNames = types.map((type) => type.type.name);
           const filteredSprites = getSprites(sprites);
@@ -72,6 +72,7 @@ function Pokedex() {
             sprites: filteredSprites,
             types: typeNames,
             ability,
+            hp: stats[0].base_stat,
           });
         } catch (error) {
           console.log(error);
@@ -108,11 +109,15 @@ function Pokedex() {
   }
 
   if (!pokemonList.length) {
-    return <LoadingScreen />;
+    return (
+      <div className="main-content">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="main-content">
       <PokemonFilters
         pokemonTypes={pokemonTypes}
         filterPokemon={filterPokemon}
@@ -125,7 +130,7 @@ function Pokedex() {
             <Pokemon key={pokemon.id} pokemon={pokemon} />
           ))}
       </div>
-    </>
+    </div>
   );
 }
 

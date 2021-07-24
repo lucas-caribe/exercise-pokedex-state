@@ -2,4 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   margin: 10px 10px;
+  font-family: sans-serif;
+}
+
+.main-content {
+  flex-grow: 1;
 }
