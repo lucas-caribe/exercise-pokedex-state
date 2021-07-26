@@ -4,6 +4,8 @@ import Pokemon from '../Pokemon';
 import PokemonFilters from '../PokemonFilters';
 import LoadingScreen from '../LoadingScreen';
 
+import typeColors from '../../typeColors';
+
 import './style.css';
 
 const baseURL = 'https://pokeapi.co/api/v2';
@@ -27,28 +29,10 @@ function Pokedex() {
       }
     }
 
-    function getSprites(sprites) {
-      return {
-        back_default: sprites.back_default,
-        back_shiny: sprites.back_shiny,
-        front_default: sprites.front_default,
-        front_shiny: sprites.front_shiny,
-        animated_back_default:
-          sprites.versions['generation-v']['black-white'].animated.back_default,
-        animated_back_shiny:
-          sprites.versions['generation-v']['black-white'].animated.back_shiny,
-        animated_front_default:
-          sprites.versions['generation-v']['black-white'].animated
-            .front_default,
-        animated_front_shiny:
-          sprites.versions['generation-v']['black-white'].animated.front_shiny,
-      };
-    }
-
     async function fetchPokemonApi() {
       const fullList = [];
 
-      for (let i = 1; i <= 151; i++) {
+      for (let i = 1; i <= 20; i++) {
         try {
           const response = await fetch(`${baseURL}/pokemon/${i}`);
           const data = await response.json();
@@ -56,7 +40,6 @@ function Pokedex() {
           const { id, name, height, weight, sprites, types, stats } = data;
           const ability = await getAbilityInfo(data.abilities[0].ability.url);
           const typeNames = types.map((type) => type.type.name);
-          const filteredSprites = getSprites(sprites);
 
           fullList.push({
             id,
@@ -69,7 +52,7 @@ function Pokedex() {
               value: height / 10,
               measurementUnit: 'm',
             },
-            sprites: filteredSprites,
+            sprite: sprites.other['official-artwork'].front_default,
             types: typeNames,
             ability,
             hp: stats[0].base_stat,
@@ -83,14 +66,7 @@ function Pokedex() {
       setFilteredPokemon(fullList);
     }
 
-    async function getPokemonTypes() {
-      const response = await fetch(`${baseURL}/type/`);
-      const data = await response.json();
-
-      setPokemonTypes(data.results.map((type) => type.name));
-    }
-
-    getPokemonTypes();
+    setPokemonTypes(Object.keys(typeColors));
     fetchPokemonApi();
   }, []);
 

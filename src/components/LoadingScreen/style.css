@@ -11,12 +11,8 @@
   visibility: hidden;
 }
 
-.loading-container span:nth-of-type(1) {
-  margin-left: .5em;
-}
-
 .loading-container span:nth-of-type(2) {
-  animation-delay: .5s;
+  animation-delay: 0.5s;
 }
 
 .loading-container span:nth-of-type(3) {

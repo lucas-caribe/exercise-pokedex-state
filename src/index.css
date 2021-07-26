@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@font-face {
+  font-family: Gill Sans Nova;
+  src: url('./assets/gill-sans-nova.ttf');
+}
 
 * {
   margin: 0;
@@ -8,9 +11,7 @@
 
 body {
   margin: 0;
-  font-family: 'Press Start 2P', sans-serif;
+  font-family: Gill Sans Nova, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #303030;
-  color: white;
 }
