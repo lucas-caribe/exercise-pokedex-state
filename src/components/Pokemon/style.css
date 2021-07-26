@@ -32,6 +32,9 @@
   font-weight: 700;
   font-size: 1.2em;
   letter-spacing: 0.05em;
+  color: white;
+  text-shadow: -0.5px 0 #303030, 0 0.5px #303030, 0.5px 0 #303030,
+    0 -0.5px #303030;
 }
 
 .poke-hp {
