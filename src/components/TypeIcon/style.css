@@ -2,7 +2,6 @@
   padding: 1em;
   border-radius: 50%;
   position: relative;
-  filter: brightness(90%);
 }
 
 .type-icon img {

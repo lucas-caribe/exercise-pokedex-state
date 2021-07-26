@@ -16,29 +16,15 @@ function Pokedex() {
   const [pokemonTypes, setPokemonTypes] = useState([]);
 
   useEffect(() => {
-    async function getAbilityInfo(ability) {
-      try {
-        const response = await fetch(ability);
-        const data = await response.json();
-
-        const { name, effect_entries } = data;
-
-        return { name, effect: effect_entries[0].short_effect };
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
     async function fetchPokemonApi() {
       const fullList = [];
 
-      for (let i = 1; i <= 151; i++) {
+      for (let i = 1; i <= 200; i++) {
         try {
           const response = await fetch(`${baseURL}/pokemon/${i}`);
           const data = await response.json();
 
           const { id, name, height, weight, sprites, types, stats } = data;
-          const ability = await getAbilityInfo(data.abilities[0].ability.url);
           const typeNames = types.map((type) => type.type.name);
 
           fullList.push({
@@ -54,7 +40,6 @@ function Pokedex() {
             },
             sprite: sprites.other['official-artwork'].front_default,
             types: typeNames,
-            ability,
             hp: stats[0].base_stat,
           });
         } catch (error) {
