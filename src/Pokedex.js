@@ -38,11 +38,11 @@ class Pokedex extends React.Component {
   }
 
   handleClick() {
-    this.setState({
-      filteredPokemon: this.state.filteredPokemon,
+    this.setState(({ filteredPokemon }) => ({
+      filteredPokemon,
       currentPoke:
         (this.state.currentPoke + 1) % this.state.filteredPokemon.length,
-    });
+    }));
   }
 
   render() {
