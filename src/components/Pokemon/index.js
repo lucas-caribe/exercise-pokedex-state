@@ -6,9 +6,15 @@ import typeColors from '../../typeColors';
 
 import './style.css';
 
-function Pokemon({
-  pokemon: { name, types, averageWeight, averageHeight, sprite, hp },
-}) {
+// attack,
+// defense,
+// specialAttack,
+// specialDefense,
+// speed,
+
+function Pokemon({ pokemon }) {
+  const { name, types, averageWeight, averageHeight, sprite, hp } = pokemon;
+
   const typeColor = typeColors[types[0]];
 
   const cardStyle = {
