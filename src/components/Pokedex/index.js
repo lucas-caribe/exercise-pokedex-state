@@ -19,7 +19,7 @@ function Pokedex() {
     async function fetchPokemonApi() {
       const fullList = [];
 
-      for (let i = 1; i <= 200; i++) {
+      for (let i = 1; i <= 5; i++) {
         try {
           const response = await fetch(`${baseURL}/pokemon/${i}`);
           const data = await response.json();
